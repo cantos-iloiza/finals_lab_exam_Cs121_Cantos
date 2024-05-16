@@ -20,18 +20,18 @@ class DiceGame:
             os.makedirs('data')
 
         if not os.path.exists('data/rankings.txt'):
-            with open('data/rankings.txt', 'w') as file:
+            with open('data/rankings.txt', 'w') as f:
                 pass
         else:
-            with open('data/rankings.txt', 'r') as file:
-                for line in file:
+            with open('data/rankings.txt', 'r') as f:
+                for line in f:
                     username, game_id, points, wins = line.strip().split(',')
                     score = Score(username, game_id, int(points), int(wins))
                     self.scores.append(score)
 
     def save_score(self, score):
-        with open('data/rankings.txt', 'a') as file:
-            file.write(f"{score.username},{score.game_id},{score.points},{score.wins}\n")
+        with open('data/rankings.txt', 'a') as f:
+            f.write(f"{score.username},{score.game_id},{score.points},{score.wins}\n")
 
     def game_rules(self):
         print("\nGame Rules -------------------------------------------------------------------------------")
@@ -49,33 +49,36 @@ class DiceGame:
     def play_game(self):
         print(f"\nGame Start! {self.current_user} vs Computer!")
         input("Press ENTER to roll the dice >>>")
+        
         total_points = 0
         total_stages_won = 0
-
+        
         while True:
             stage_points = 0 
+
             for stage in range(3):
-                print("====================")
+                print("\n====================")
                 print(f"Stage {stage+1}:")
                 print("====================")
 
                 user_score = random.randint(1, 6)
                 cpu_score = random.randint(1, 6)
+
                 print(f"You rolled: {user_score}")
                 print(f"CPU rolled: {cpu_score}\n")
 
-            if user_score > cpu_score:
-                print("You win this round!")
-                stage_points += 1
-            elif user_score < cpu_score:
-                print("CPU wins this round!")
-            else:
-                print("It's a tie! Roll again...")
+                if user_score > cpu_score:
+                    print("You win this round!")
+                    stage_points += 1
+                elif user_score < cpu_score:
+                    print("CPU wins this round!")
+                else:
+                    print("It's a tie! Roll again...")
 
             if stage_points > 0:
                 total_stages_won += 1
                 total_points += 3
-                print("You win this stage!")
+                print("\nYou win this stage!")
                 choice = input("Do you want to continue to the next stage? (1 for Yes, 0 for No): ")
                 if choice != '1':
                     break
@@ -84,7 +87,7 @@ class DiceGame:
                 break
         
         print("\n>>>>> Score Sheet <<<<<")
-        print(f"You've got {total_points} point/s.")
+        print(f"You've won {total_points} point/s.")
         print(f"You've won on {total_stages_won} stage/s.")
 
         if self.current_user:
@@ -109,23 +112,24 @@ class DiceGame:
         self.save_score(user_score)
 
     def show_top_scores(self):
-        if not self.scores:
+        if self.scores:
+            print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>> Top 10 Scores <<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+            print("======================================================================")
+            sorted_scores = sorted(self.scores, key=lambda x: x.points, reverse=True)[:10]
+            for i, score in enumerate(sorted_scores, 1):
+                print(f"{i}. User: {score.username}, Points: {score.points}, Wins: {score.wins}")
+            print("======================================================================")
+            self.menu()
+        
+        else:
             print("\n=============================")
             print("---- No scores available ----")
             print("=============================")
             self.menu()
             return
-
-        print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>> Top 10 Scores <<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-        print("======================================================================")
-        sorted_scores = sorted(self.scores, key=lambda x: x.points, reverse=True)[:10]
-        for i, score in enumerate(sorted_scores, 1):
-            print(f"{i}. Username: {score.username}, Points: {score.points}, Wins: {score.wins}")
-            
-        self.menu()
-    
+        
     def menu(self):  
-        while True:  # Use a loop to allow re-entry on invalid choice
+        while True: 
             if self.current_user:
                 print("\n======== Welcome to the Dice Roll Game! ========")
                 print("Time Logged in: " + DiceGame.current_time())
@@ -154,6 +158,7 @@ class DiceGame:
                     break
                 else:
                     print("Invalid choice. Please try again.")
+                    
             else:
                 print("You are not logged in.")
                 break

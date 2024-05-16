@@ -8,15 +8,22 @@ def sign_up(game):
     try:
         # Prompt the user to register
         print("\nRegister-------------------------------------------------------------")
-        username = input("Enter a username (at least 4 characters): ")
-        password = input("Enter a password (at least 8 characters): ")
+        username = input("Enter a username (at least 4 characters), or leave blank to cancel: ")
+        if not username:
+            print("\nRegistration cancelled. Returning to main menu...")
+            return  # Return to the main menu if username is blank
+
+        password = input("Enter a password (at least 8 characters), or leave blank to cancel: ")
+        if not password:
+            print("\nRegistration cancelled. Returning to main menu...")
+            return  # Return to the main menu if password is blank
+
         input(f"Registering {username}.....")  
         print("-----------------------------------------------------------------------")
 
         # Attempt to register the user
         if game.user_manager.register(username, password):
             print("<<<<< Registered successfully >>>>> " + current_time())
-
         else:
             print(">>>>> Register failed. Please try again. <<<<<")
 
@@ -28,7 +35,15 @@ def log_in(game):
         # Prompt the user to log in
         print("\nLog In-----------------------------------------------------------------")
         username = input("Enter your Username: ")
+        if not username:
+            print("\nLogin cancelled. Returning to main menu...")
+            return  # Return to the main menu if username is blank
+        
         password = input("Enter your Password: ")
+        if not password:
+            print("\nLogin cancelled. Returning to main menu...")
+            return  # Return to the main menu if password is blank
+
         input(f"Logging in.....") 
         print("-----------------------------------------------------------------------")
 
