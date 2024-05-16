@@ -6,67 +6,67 @@ class UserManager:
         self.load_users()
 
     def load_users(self):
-        # Create data directory if it doesn't exist
         if not os.path.exists('data'):
             os.makedirs('data')
 
-        # Check if users.txt exists, if not, create it
         if not os.path.exists('data/users.txt'):
-            with open('data/users.txt', 'w') as file:
-                pass 
+            with open('data/users.txt', 'w') as f:
+                pass
 
-        # Load user data from users.txt
-        with open('data/users.txt', 'r') as file:
-            for line in file:
-                username, password = line.strip().split(',')
-                self.users[username] = password
+            with open('data/users.txt' , 'r') as f:
+                for line in f:
+                    username, password = line.strip().split(',')
+                    self.users[username] = password
 
     def save_users(self):
-        # Save user data to users.txt
-        with open('data/users.txt', 'w') as file:
-            for username, password in self.users.items():
-                file.write(f"{username},{password}\n")
+        with open('data/users.txt', 'w') as f:
+            for username, password in self.users.item():
+                f.write(f"User1: {username}, Password: {password}\n")
 
     def validate_username(self, username):
         if len(username) >= 4:
-            return True
-        else:
-            return False
+            return 
 
     def validate_password(self, password):
         if len(password) >= 8:
-            return True
-        else:
-            return False
-
+            return 
+    
     def register(self, username, password):
         if username in self.users:
-            print("Username already exists! Choose another.")
+            print("Username already exists! Please input another.")
+            return
+
+        if not self.validate_username(username):
+            print("*-" * 28)
+            print("The username does not meet the requirements, must be at least 4 characters.")
+            print("*-" * 28)
             return False
         
-        # Validate username and password
-        if not self.validate_username(username) or not self.validate_password(password):
+        if not self.validate_password(password):
             print("*-" * 28)
-            print("The username or password does not meet the requirements.")
+            print("The password does not meet the requirements, must be at least 8 characters.")
             print("*-" * 28)
             return False
         
-        # Add new user to users dictionary and save to file
         self.users[username] = password
         self.save_users()
-        return True
-
+        return
+    
     def login(self, username, password):
-        if username not in self.users:
+        if username in self.users:
+            if self.users[username] == password:
+                return True
+            else:
+                print("*-" * 10)
+                print("Incorrect password. Please try again.")
+                print("*-" * 10)
+                return False 
+        else:
             print("*-" * 10)
-            print("Username not found.")
+            print("Username not found. Please input a valid username.")
             print("*-" * 10)
-            return False 
+            return False
+            
         
-        if self.users[username] != password:
-            print("*-" * 10)
-            print("Incorrect Password.")
-            print("*-" * 10)
-            return False 
+
         
-        return True
