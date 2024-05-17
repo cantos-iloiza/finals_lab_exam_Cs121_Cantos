@@ -32,17 +32,11 @@ class UserManager:
 
     def validate_username(self, username):
         # Check if the username meets the minimum length requirement
-        if len(username) >= 4:
-            return True
-        else:
-            return False
+        return len(username) >= 4
 
     def validate_password(self, password):
         # Check if the password meets the minimum length requirement
-        if len(password) >= 8:
-            return True
-        else:
-            return False
+        return len(password) >= 8
     
     def register(self, username, password):
         # Check if the username already exists
